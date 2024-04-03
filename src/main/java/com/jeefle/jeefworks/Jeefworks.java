@@ -8,7 +8,7 @@ import com.gregtechceu.gtceu.api.machine.MachineDefinition;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
-import com.jeefle.jeefworks.machine.JWMachines;
+import com.jeefle.jeefworks.data.JWMachines;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;

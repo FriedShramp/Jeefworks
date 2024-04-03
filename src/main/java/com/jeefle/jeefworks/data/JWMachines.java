@@ -1,26 +1,20 @@
-package com.jeefle.jeefworks.machine;
+package com.jeefle.jeefworks.data;
 
 
 import com.gregtechceu.gtceu.GTCEu;
 import com.gregtechceu.gtceu.api.GTValues;
-import com.gregtechceu.gtceu.api.block.ICoilType;
-import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
-import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.data.RotationState;
-import com.gregtechceu.gtceu.api.data.chemical.ChemicalHelper;
-import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
 import com.gregtechceu.gtceu.api.machine.*;
 import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
-import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
 import com.gregtechceu.gtceu.api.pattern.Predicates;
-import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.OverclockingLogic;
 import com.gregtechceu.gtceu.api.registry.registrate.MachineBuilder;
-import com.gregtechceu.gtceu.client.renderer.machine.SimpleGeneratorMachineRenderer;
 import com.gregtechceu.gtceu.common.data.*;
 import com.jeefle.jeefworks.Jeefworks;
+import com.jeefle.jeefworks.api.machine.multiblock.APartAbility;
+import com.jeefle.jeefworks.api.machine.multiblock.VolcanusMachine;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
 import it.unimi.dsi.fastutil.ints.Int2LongFunction;
 
@@ -47,6 +41,41 @@ public class JWMachines {
     public static final MachineDefinition[] DEHYDRATOR =
             registerSimpleMachines("dehydrator", GTRecipeTypes.MACERATOR_RECIPES, GTMachines.defaultTankSizeFunction, ULVTier);
     */
+
+    private static Object APartAbility;
+    public static final MultiblockMachineDefinition VOLCANUS = REGISTRATE.multiblock("volcanus", VolcanusMachine::new)
+            .rotationState(RotationState.NON_Y_AXIS)
+            .recipeTypes(GTRecipeTypes.BLAST_RECIPES)
+            .appearanceBlock(GTBlocks.CASING_STAINLESS_CLEAN)
+            .pattern(definition -> FactoryBlockPattern.start(RIGHT, BACK, UP)
+                    .aisle("AASAA", "ABBBA", "ABBBA", "ABBBA", "AAAAA")
+                    .aisle("C###C", "#DDD#", "#DED#", "#DDD#", "C###C").setRepeatable(4, 34)
+                    .aisle("VVVVV", "VBBBV", "VBBBV", "VBBBV", "VVVVV")
+                    .where("S", Predicates.controller(Predicates.blocks(definition.get())))
+                    .where("V", Predicates.blocks(GTBlocks.CASING_STAINLESS_CLEAN.get())
+                            .or(abilities(PartAbility.IMPORT_FLUIDS))
+                            .or(abilities(PartAbility.IMPORT_ITEMS)))
+                    .where("A", Predicates.blocks(GTBlocks.CASING_STAINLESS_CLEAN.get())
+                            .or(abilities(PartAbility.EXPORT_FLUIDS))
+                            .or(abilities(PartAbility.EXPORT_ITEMS))
+                            .or(abilities((PartAbility) APartAbility.BLAZE_VENT))
+                            .or(autoAbilities(true, false, false)))
+                    .where("B", Predicates.blocks(GTNNCasingBlocks.PROCESS_MACHINE_CASING.get()))
+                    .where("C", Predicates.blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Steel)))
+                    .where("D", Predicates.blocks(GTBlocks.CASING_LAMINATED_GLASS.get()))
+                    .where("E", Predicates.blocks(HIGH_SPEED_PIPE_BLOCK.get()))
+                    .where("#", Predicates.air())
+                    .build())
+            .workableCasingRenderer(
+                    GTCEu.id("block/casings/solid/machine_casing_clean_stainless_steel"),
+                    GTNN.id("block/multiblock/neutron_activator"), false)
+            .register();
+
+
+
+
+
+
 
     public static MachineDefinition[] registerSimpleMachines(String name,
                                                              GTRecipeType recipeType,
