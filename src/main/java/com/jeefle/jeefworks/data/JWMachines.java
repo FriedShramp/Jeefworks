@@ -102,9 +102,9 @@ public class JWMachines {
             .recipeModifier(GTRecipeModifiers.PARALLEL_HATCH.apply(OverclockingLogic.PERFECT_OVERCLOCK, (oc) -> GTRecipeModifiers::ebfOverclock))
             .appearanceBlock(JWCasingBlocks.VULCANIC_CASING)
             .pattern(definition -> FactoryBlockPattern.start()
-                    .aisle("AAA", "AcA", "AcA", "AAA")
-                    .aisle("AAA", "c#c", "c#c", "AMA")
-                    .aisle("ASA", "AcA", "AcA", "AAA")
+                    .aisle("AAA", "AAA", "AAA")
+                    .aisle("AAA", "A#A", "AMA")
+                    .aisle("ASA", "AAA", "AAA")
                     .where("S", Predicates.controller(Predicates.blocks(definition.get())))
                     .where("A", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get())
                             .or(autoAbilities(definition.getRecipeTypes()))
@@ -120,7 +120,7 @@ public class JWMachines {
             .additionalDisplay((controller, components) -> {
                 if (controller instanceof CoilWorkableElectricMultiblockMachine coilMachine && controller.isFormed()) {
                     components.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature",
-                            Component.translatable(FormattingUtil.formatNumbers(coilMachine.getCoilType().getCoilTemperature() + 100L * Math.max(0, coilMachine.getTier() - GTValues.MV)) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
+                            Component.translatable(FormattingUtil.formatNumbers(4000) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
                 }
             })
             .compassNodeSelf()

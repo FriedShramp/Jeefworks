@@ -12,6 +12,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.CoilWorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
+import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 import com.jeefle.jeefworks.api.machine.feature.IGTPPMachine;
 import com.jeefle.jeefworks.api.machine.multiblock.part.BlazeVentMachine;
@@ -122,22 +123,31 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
 
     @Nullable
     public static GTRecipe volcanusRecipe(MetaMachine machine, @Nonnull GTRecipe recipe) {
+        recipe
+        if (recipe.getType() == GTRecipeTypes.BLAST_RECIPES){
+            if (recipe.data.getInt("ebf_temp") <= 4000){
+                recipe.data.putInt("ebf_temp", 0);
+            }else{
+                return null;
+            }
+        }
         if (machine instanceof VolcanusMachine volcanus) {
             if (volcanus.hasBlaze()){
                 return recipe;
             }
-            return null;
+            return recipe;
         }
         throw new RuntimeException("Machine is not a Volcanus");
     }
 
     @Override
     protected @org.jetbrains.annotations.Nullable GTRecipe getRealRecipe(GTRecipe recipe) {
-        return volcanusRecipe(this, recipe);
+        recipe = super.getRealRecipe(volcanusRecipe(this, recipe));
+        return recipe;
     }
 
     @Override
     public int getCoilTier(){
-        return 10;
+        return 1;
     }
 }
