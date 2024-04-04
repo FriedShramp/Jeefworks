@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.api.machine.ConditionalSubscriptionHandler;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.MetaMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
+import com.gregtechceu.gtceu.api.machine.multiblock.CoilWorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
@@ -25,14 +26,14 @@ import javax.annotation.Nullable;
 import java.util.HashSet;
 
 //mostly from gt-- thank you arbor :)
-public class VolcanusMachine extends WorkableElectricMultiblockMachine implements IGTPPMachine {
+public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine implements IGTPPMachine {
 
     private static final double discount = 0.7;
     private boolean isWorking;
     private Set<BlazeVentMachine> blazeVents;
     protected ConditionalSubscriptionHandler blazeVentSubs;
-    public VolcanusMachine(IMachineBlockEntity holder, Object... args) {
-        super(holder, args);
+    public VolcanusMachine(IMachineBlockEntity holder) {
+        super(holder);
         this.blazeVentSubs = new ConditionalSubscriptionHandler(this, this::blazeUpdate, this :: isFormed);
     }
 
@@ -65,6 +66,7 @@ public class VolcanusMachine extends WorkableElectricMultiblockMachine implement
             }
             if (part instanceof ItemBusPartMachine itemBusPartMachine) {
             }
+
             if (part instanceof BlazeVentMachine blazeVent) {
                 blazeVents = APartAbility.getOrDefault(blazeVents, HashSet::new);
                 blazeVents.add(blazeVent);
@@ -87,6 +89,7 @@ public class VolcanusMachine extends WorkableElectricMultiblockMachine implement
         if (blazeVents == null) return;
 
         boolean anyWorking = false;
+
         for (var vent : blazeVents) {
             long increase = vent.consumeBlaze();
             if (increase > 0) {
@@ -128,4 +131,13 @@ public class VolcanusMachine extends WorkableElectricMultiblockMachine implement
         throw new RuntimeException("Machine is not a Volcanus");
     }
 
+    @Override
+    protected @org.jetbrains.annotations.Nullable GTRecipe getRealRecipe(GTRecipe recipe) {
+        return volcanusRecipe(this, recipe);
+    }
+
+    @Override
+    public int getCoilTier(){
+        return 10;
+    }
 }

@@ -1,0 +1,5 @@
+{
+    "ldlib": {
+        "connection": "jeefworks:block/lamps/heat_lamp_ctm"
+    }
+}

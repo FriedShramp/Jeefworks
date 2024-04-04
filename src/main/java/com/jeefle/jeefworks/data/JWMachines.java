@@ -2,29 +2,80 @@ package com.jeefle.jeefworks.data;
 
 
 import com.gregtechceu.gtceu.GTCEu;
+import com.gregtechceu.gtceu.api.GTCEuAPI;
 import com.gregtechceu.gtceu.api.GTValues;
+import com.gregtechceu.gtceu.api.block.MetaMachineBlock;
+import com.gregtechceu.gtceu.api.blockentity.MetaMachineBlockEntity;
+import com.gregtechceu.gtceu.api.capability.IMiner;
+import com.gregtechceu.gtceu.api.capability.PlatformEnergyCompat;
+import com.gregtechceu.gtceu.api.capability.recipe.FluidRecipeCapability;
+import com.gregtechceu.gtceu.api.capability.recipe.IO;
+import com.gregtechceu.gtceu.api.capability.recipe.ItemRecipeCapability;
 import com.gregtechceu.gtceu.api.data.RotationState;
+import com.gregtechceu.gtceu.api.data.chemical.material.Material;
+import com.gregtechceu.gtceu.api.data.chemical.material.properties.PropertyKey;
+import com.gregtechceu.gtceu.api.data.tag.TagPrefix;
+import com.gregtechceu.gtceu.api.item.DrumMachineItem;
 import com.gregtechceu.gtceu.api.machine.*;
-import com.gregtechceu.gtceu.api.machine.multiblock.PartAbility;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.IRotorHolderMachine;
+import com.gregtechceu.gtceu.api.machine.multiblock.*;
+import com.gregtechceu.gtceu.api.machine.steam.SimpleSteamMachine;
+import com.gregtechceu.gtceu.api.machine.steam.SteamBoilerMachine;
 import com.gregtechceu.gtceu.api.pattern.FactoryBlockPattern;
+import com.gregtechceu.gtceu.api.pattern.MultiblockShapeInfo;
 import com.gregtechceu.gtceu.api.pattern.Predicates;
+import com.gregtechceu.gtceu.api.pattern.TraceabilityPredicate;
+import com.gregtechceu.gtceu.api.pattern.predicates.SimplePredicate;
 import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.recipe.OverclockingLogic;
+import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.registry.registrate.MachineBuilder;
-import com.gregtechceu.gtceu.common.data.*;
+import com.gregtechceu.gtceu.api.registry.registrate.MultiblockMachineBuilder;
+import com.gregtechceu.gtceu.client.TooltipHelper;
+import com.gregtechceu.gtceu.client.renderer.machine.*;
+import com.gregtechceu.gtceu.common.block.BoilerFireboxType;
+import com.gregtechceu.gtceu.common.data.GTMachines;
+import com.gregtechceu.gtceu.common.data.GTRecipeModifiers;
+import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
+import com.gregtechceu.gtceu.common.machine.electric.*;
+import com.gregtechceu.gtceu.common.machine.multiblock.electric.*;
+import com.gregtechceu.gtceu.common.machine.multiblock.generator.LargeCombustionEngineMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.generator.LargeTurbineMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.part.*;
+import com.gregtechceu.gtceu.common.machine.multiblock.primitive.CokeOvenMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitiveBlastFurnaceMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.primitive.PrimitivePumpMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.steam.LargeBoilerMachine;
+import com.gregtechceu.gtceu.common.machine.multiblock.steam.SteamParallelMultiblockMachine;
+import com.gregtechceu.gtceu.common.machine.steam.SteamLiquidBoilerMachine;
+import com.gregtechceu.gtceu.common.machine.steam.SteamMinerMachine;
+import com.gregtechceu.gtceu.common.machine.steam.SteamSolidBoilerMachine;
+import com.gregtechceu.gtceu.common.machine.steam.SteamSolarBoiler;
+import com.gregtechceu.gtceu.common.machine.storage.*;
+import com.gregtechceu.gtceu.common.pipelike.fluidpipe.longdistance.LDFluidEndpointMachine;
+import com.gregtechceu.gtceu.common.pipelike.item.longdistance.LDItemEndpointMachine;
+import com.gregtechceu.gtceu.config.ConfigHolder;
+import com.gregtechceu.gtceu.data.lang.LangHandler;
+import com.gregtechceu.gtceu.integration.ae2.GTAEMachines;
+import com.gregtechceu.gtceu.integration.kjs.GTRegistryInfo;
+import com.gregtechceu.gtceu.utils.FormattingUtil;
+import com.gregtechceu.gtceu.utils.GTUtil;
 import com.jeefle.jeefworks.Jeefworks;
 import com.jeefle.jeefworks.api.machine.multiblock.APartAbility;
 import com.jeefle.jeefworks.api.machine.multiblock.VolcanusMachine;
+import com.jeefle.jeefworks.api.machine.multiblock.part.BlazeVentMachine;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
 import it.unimi.dsi.fastutil.ints.Int2LongFunction;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Locale;
 import java.util.function.BiFunction;
 
 import static com.gregtechceu.gtceu.api.GTValues.*;
-import static com.gregtechceu.gtceu.api.pattern.Predicates.abilities;
-import static com.gregtechceu.gtceu.api.pattern.Predicates.autoAbilities;
-import static com.gregtechceu.gtceu.api.pattern.util.RelativeDirection.*;
+import static com.gregtechceu.gtceu.api.pattern.Predicates.*;
 import static com.gregtechceu.gtceu.utils.FormattingUtil.toEnglishName;
 import static com.jeefle.jeefworks.Jeefworks.REGISTRATE;
 
@@ -42,34 +93,40 @@ public class JWMachines {
             registerSimpleMachines("dehydrator", GTRecipeTypes.MACERATOR_RECIPES, GTMachines.defaultTankSizeFunction, ULVTier);
     */
 
-    private static Object APartAbility;
+    public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/casings/vulcanic_casing"), 20000, MV2ZPM);
+
+
     public static final MultiblockMachineDefinition VOLCANUS = REGISTRATE.multiblock("volcanus", VolcanusMachine::new)
             .rotationState(RotationState.NON_Y_AXIS)
             .recipeTypes(GTRecipeTypes.BLAST_RECIPES)
-            .appearanceBlock(GTBlocks.CASING_STAINLESS_CLEAN)
-            .pattern(definition -> FactoryBlockPattern.start(RIGHT, BACK, UP)
-                    .aisle("AASAA", "ABBBA", "ABBBA", "ABBBA", "AAAAA")
-                    .aisle("C###C", "#DDD#", "#DED#", "#DDD#", "C###C").setRepeatable(4, 34)
-                    .aisle("VVVVV", "VBBBV", "VBBBV", "VBBBV", "VVVVV")
+            .recipeModifier(GTRecipeModifiers.PARALLEL_HATCH.apply(OverclockingLogic.PERFECT_OVERCLOCK, (oc) -> GTRecipeModifiers::ebfOverclock))
+            .appearanceBlock(JWCasingBlocks.VULCANIC_CASING)
+            .pattern(definition -> FactoryBlockPattern.start()
+                    .aisle("AAA", "AcA", "AcA", "AAA")
+                    .aisle("AAA", "c#c", "c#c", "AMA")
+                    .aisle("ASA", "AcA", "AcA", "AAA")
                     .where("S", Predicates.controller(Predicates.blocks(definition.get())))
-                    .where("V", Predicates.blocks(GTBlocks.CASING_STAINLESS_CLEAN.get())
-                            .or(abilities(PartAbility.IMPORT_FLUIDS))
-                            .or(abilities(PartAbility.IMPORT_ITEMS)))
-                    .where("A", Predicates.blocks(GTBlocks.CASING_STAINLESS_CLEAN.get())
-                            .or(abilities(PartAbility.EXPORT_FLUIDS))
-                            .or(abilities(PartAbility.EXPORT_ITEMS))
-                            .or(abilities((PartAbility) APartAbility.BLAZE_VENT))
-                            .or(autoAbilities(true, false, false)))
-                    .where("B", Predicates.blocks(GTNNCasingBlocks.PROCESS_MACHINE_CASING.get()))
-                    .where("C", Predicates.blocks(ChemicalHelper.getBlock(TagPrefix.frameGt, GTMaterials.Steel)))
-                    .where("D", Predicates.blocks(GTBlocks.CASING_LAMINATED_GLASS.get()))
-                    .where("E", Predicates.blocks(HIGH_SPEED_PIPE_BLOCK.get()))
+                    .where("A", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get())
+                            .or(autoAbilities(definition.getRecipeTypes()))
+                            .or(abilities(APartAbility.BLAZE_VENT).setExactLimit(1))
+                            .or(autoAbilities(true, false, true)))
+                    .where("M", abilities(PartAbility.MUFFLER))
                     .where("#", Predicates.air())
+                    .where("c", heatingCoils())
                     .build())
             .workableCasingRenderer(
-                    GTCEu.id("block/casings/solid/machine_casing_clean_stainless_steel"),
-                    GTNN.id("block/multiblock/neutron_activator"), false)
+                    Jeefworks.id("block/casings/vulcanic_casing"),
+                    GTCEu.id("block/multiblock/electric_blast_furnace"), false)
+            .additionalDisplay((controller, components) -> {
+                if (controller instanceof CoilWorkableElectricMultiblockMachine coilMachine && controller.isFormed()) {
+                    components.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature",
+                            Component.translatable(FormattingUtil.formatNumbers(coilMachine.getCoilType().getCoilTemperature() + 100L * Math.max(0, coilMachine.getTier() - GTValues.MV)) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
+                }
+            })
+            .compassNodeSelf()
             .register();
+
+
 
 
 
@@ -105,6 +162,20 @@ public class JWMachines {
             definitions[tier] = builder.apply(tier, register);
         }
         return definitions;
+    }
+
+    private static MachineDefinition[] registerBlazeVents(String name, String displayname, ResourceLocation model, long initialCapacity, int[] tiers) {
+        return registerTieredMachines(name,
+                (holder, tier) -> new BlazeVentMachine(holder, tier, initialCapacity),
+                (tier, builder) -> {
+                    builder.langValue(VNF[tier] + ' ' + displayname)
+                            .rotationState(RotationState.ALL)
+                            .workableTieredHullRenderer(model)
+                            .abilities(APartAbility.BLAZE_VENT)
+                            .compassNode("fluid_hatch")
+                            .tooltips(Component.translatable("gtceu.machine." + model + ".tooltip"));
+                    return builder.register();
+                }, tiers);
     }
 
     public static void init() {

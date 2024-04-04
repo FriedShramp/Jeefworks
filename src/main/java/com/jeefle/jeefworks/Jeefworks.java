@@ -10,6 +10,7 @@ import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.jeefle.jeefworks.data.JWMachines;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
+import com.jeefle.jeefworks.registry.JWDatagen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
@@ -32,6 +33,7 @@ public class Jeefworks {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
         JWCreativeTabs.init();
+        JWDatagen.init();
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);

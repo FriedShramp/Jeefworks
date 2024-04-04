@@ -2,7 +2,9 @@ package com.jeefle.jeefworks;
 
 import com.gregtechceu.gtceu.api.addon.GTAddon;
 import com.gregtechceu.gtceu.api.addon.IGTAddon;
+import com.gregtechceu.gtceu.api.addon.events.MaterialCasingCollectionEvent;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
+import com.jeefle.jeefworks.data.JWCasingBlocks;
 import net.minecraft.data.recipes.FinishedRecipe;
 
 import java.util.function.Consumer;
@@ -33,6 +35,11 @@ public class JWAddon implements IGTAddon {
     @Override
     public void addRecipes(Consumer<FinishedRecipe> provider) {
         //CustomRecipes.init(provider);
+    }
+
+    @Override
+    public void collectMaterialCasings(MaterialCasingCollectionEvent event) {
+        JWCasingBlocks.init();
     }
 
     // If you have custom ingredient types, uncomment this & change to match your capability.

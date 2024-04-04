@@ -15,16 +15,18 @@ import com.gregtechceu.gtceu.common.machine.multiblock.part.FluidHatchPartMachin
 public class BlazeVentMachine extends FluidHatchPartMachine {
 
     private static final double discount = 0.7;
+    private static final double quicken = 0.5;
+
     public BlazeVentMachine(IMachineBlockEntity holder, int tier, long initialCapacity, Object... args) {
         super(holder, tier, IO.IN, initialCapacity, 1, args);
     }
 
     public long getMaxFluidConsume() {
-        return Math.round(INITIAL_TANK_CAPACITY_1X * 0.01);
+        return Math.round(100 * 0.01);
     }
 
     public long consumeBlaze(){
-        if (this.isWorkingEnabled() && this.tank.drain(getMaxFluidConsume(),true).getAmount() == getMaxFluidConsume() && this.tank.getFluidInTank(0).getFluid() == GTMaterials.Blaze.getFluid()){
+        if (this.tank.drain(getMaxFluidConsume(),true).getAmount() >= getMaxFluidConsume() && this.tank.getFluidInTank(0).getRawFluid() == GTMaterials.Blaze.getFluid()){
             return Math.abs(this.tank.drain(getMaxFluidConsume(), false).getAmount());
         } else{
             return 0;
@@ -36,10 +38,11 @@ public class BlazeVentMachine extends FluidHatchPartMachine {
         GTRecipe newRecipe = recipe.copy();
         if (true) {
             if (true) {
-                long newEu = (long) Math.abs((double) RecipeHelper.getInputEUt(recipe) * discount);
-                for (Content content : recipe.getTickInputContents(EURecipeCapability.CAP)) {
+                long newEu = (long) Math.floor((double) RecipeHelper.getInputEUt(newRecipe) * discount);
+                for (Content content : newRecipe.getTickInputContents(EURecipeCapability.CAP)) {
                     content.content = newEu;
                 }
+                newRecipe.duration = (int) Math.floor(newRecipe.duration * quicken);
             }
         }
         return newRecipe;
