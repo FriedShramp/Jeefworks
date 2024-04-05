@@ -32,6 +32,7 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
 
     private static final double discount = 0.7;
     private static final double quicken = 0.5;
+    private static final double blazeConstant = 1;
 
     private static final double consumptionRate = 0.5;
 
@@ -46,10 +47,11 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
         this.tank = createTank();
     }
 
+
     @Override
-    public void beforeWorking(IWorkableMultiController controller) {
+    public void onWorking(IWorkableMultiController controller) {
         super.beforeWorking(controller);
-        this.consumeBlaze(controller.getRecipeLogic().getDuration());
+        this.consumeBlaze((long) blazeConstant);
     }
 
     protected NotifiableFluidTank createTank(Object... args) {
@@ -57,10 +59,18 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
     }
 
     public long consumeBlaze(long fluidAmount){
-        if (this.tank.drain(fluidAmount,true).getAmount() == fluidAmount && this.tank.getFluidInTank(0).getRawFluid() == Fluids.WATER){
+        if (this.tank.drain(fluidAmount,true).getAmount() == fluidAmount && this.tank.getFluidInTank(0).getRawFluid() == GTMaterials.Blaze.getFluid()){
             return Math.abs(this.tank.drain(fluidAmount, false).getAmount());
         } else{
             return 0;
+        }
+    }
+
+    public boolean checkBlaze(long fluidAmount){
+        if (this.tank.drain(fluidAmount,true).getAmount() == fluidAmount && this.tank.getFluidInTank(0).getRawFluid() == GTMaterials.Blaze.getFluid()){
+            return true;
+        } else{
+            return false;
         }
     }
 
@@ -87,17 +97,8 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
                     content.content = newEu;
                 }
                 newRecipe.duration = (int) Math.floor(newRecipe.duration * quicken);
-                this.consumeBlaze(1);
             }
         }
         return newRecipe;
-    }
-
-    public GTRecipe doBlaze(GTRecipe recipe){
-        if (consumeBlaze((long) Math.floor(recipe.duration * consumptionRate)) > 0){
-            return recipe;
-        }else {
-            return null;
-        }
     }
 }

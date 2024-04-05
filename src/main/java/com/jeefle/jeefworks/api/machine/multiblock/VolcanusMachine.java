@@ -16,6 +16,7 @@ import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 import com.jeefle.jeefworks.api.machine.feature.IGTPPMachine;
 import com.jeefle.jeefworks.api.machine.multiblock.part.BlazeVentMachine;
+import com.jeefle.jeefworks.api.recipe.BlazeVentCondition;
 import com.lowdragmc.lowdraglib.side.item.IItemTransfer;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMaps;
 
@@ -82,6 +83,7 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
             }
         }
         if (machine instanceof VolcanusMachine volcanus) {
+            recipe.conditions.add(new BlazeVentCondition());
                 return recipe;
         }
         throw new RuntimeException("Machine is not a Volcanus");

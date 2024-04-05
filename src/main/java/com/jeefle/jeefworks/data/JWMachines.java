@@ -116,7 +116,7 @@ public class JWMachines {
                     .build())
             .workableCasingRenderer(
                     Jeefworks.id("block/casings/vulcanic_casing"),
-                    GTCEu.id("block/multiblock/electric_blast_furnace"), false)
+                    Jeefworks.id("block/multiblock/volcanus"), false)
             .additionalDisplay((controller, components) -> {
                 if (controller instanceof CoilWorkableElectricMultiblockMachine coilMachine && controller.isFormed()) {
                     components.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature",
