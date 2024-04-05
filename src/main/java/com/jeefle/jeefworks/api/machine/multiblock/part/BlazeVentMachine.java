@@ -7,6 +7,7 @@ import com.gregtechceu.gtceu.api.capability.recipe.IO;
 import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
+import com.gregtechceu.gtceu.api.machine.feature.multiblock.IWorkableMultiController;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -22,6 +23,8 @@ import com.lowdragmc.lowdraglib.syncdata.ISubscription;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
 import com.lowdragmc.lowdraglib.syncdata.field.ManagedFieldHolder;
 import com.lowdragmc.lowdraglib.syncdata.annotation.Persisted;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.material.Fluids;
 
 
 //mostly stolen from gt--
@@ -29,6 +32,8 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
 
     private static final double discount = 0.7;
     private static final double quicken = 0.5;
+
+    private static final double consumptionRate = 0.5;
 
     @Persisted
     public final NotifiableFluidTank tank;
@@ -41,17 +46,19 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
         this.tank = createTank();
     }
 
-    public long getMaxFluidConsume() {
-        return Math.round(tankCapacity * 0.01);
+    @Override
+    public void beforeWorking(IWorkableMultiController controller) {
+        super.beforeWorking(controller);
+        this.consumeBlaze(controller.getRecipeLogic().getDuration());
     }
 
     protected NotifiableFluidTank createTank(Object... args) {
-        return new NotifiableFluidTank(this, 1, tankCapacity, IO.IN);
+        return new NotifiableFluidTank(this, 1, tankCapacity, IO.BOTH);
     }
 
-    public long consumeBlaze(){
-        if (this.tank.drain(getMaxFluidConsume(),true).getAmount() >= getMaxFluidConsume() && this.tank.getFluidInTank(0).getRawFluid() == GTMaterials.Blaze.getFluid()){
-            return Math.abs(this.tank.drain(getMaxFluidConsume(), false).getAmount());
+    public long consumeBlaze(long fluidAmount){
+        if (this.tank.drain(fluidAmount,true).getAmount() == fluidAmount && this.tank.getFluidInTank(0).getRawFluid() == Fluids.WATER){
+            return Math.abs(this.tank.drain(fluidAmount, false).getAmount());
         } else{
             return 0;
         }
@@ -80,8 +87,17 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
                     content.content = newEu;
                 }
                 newRecipe.duration = (int) Math.floor(newRecipe.duration * quicken);
+                this.consumeBlaze(1);
             }
         }
         return newRecipe;
+    }
+
+    public GTRecipe doBlaze(GTRecipe recipe){
+        if (consumeBlaze((long) Math.floor(recipe.duration * consumptionRate)) > 0){
+            return recipe;
+        }else {
+            return null;
+        }
     }
 }

@@ -31,11 +31,9 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
 
     private static final double discount = 0.7;
     private boolean isWorking;
-    private Set<BlazeVentMachine> blazeVents;
     protected ConditionalSubscriptionHandler blazeVentSubs;
     public VolcanusMachine(IMachineBlockEntity holder) {
         super(holder);
-        this.blazeVentSubs = new ConditionalSubscriptionHandler(this, this::blazeUpdate, this :: isFormed);
     }
 
     @Override
@@ -46,58 +44,11 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
 
         // Cache the Map access to avoid repeated calls
         var matchContext = getMultiblockState().getMatchContext();
-        Map<Long, IO> ioMap = matchContext.getOrCreate("ioMap", Long2ObjectMaps::emptyMap);
-
-        // Cache the result of getParts() to prevent repetitive calls
-        List<IMultiPart> parts = getParts();
-        for (IMultiPart part : parts) {
-            IO io = ioMap.getOrDefault(part.self().getPos().asLong(), IO.BOTH);
-            if (io == IO.NONE) continue;
-
-            for (var handler : part.getRecipeHandlers()) {
-                var handlerIO = handler.getHandlerIO();
-                if (io != IO.BOTH && handlerIO != IO.BOTH && io != handlerIO) continue;
-                if (handler.getCapability() == EURecipeCapability.CAP && handler instanceof IEnergyContainer) {
-
-                }
-                if (handler.getCapability() == ItemRecipeCapability.CAP && handler instanceof IItemTransfer) {
-                    if (handlerIO == IO.IN || handlerIO == IO.BOTH) {
-                    }
-                }
-            }
-            if (part instanceof ItemBusPartMachine itemBusPartMachine) {
-            }
-
-            if (part instanceof BlazeVentMachine blazeVent) {
-                blazeVents = APartAbility.getOrDefault(blazeVents, HashSet::new);
-                blazeVents.add(blazeVent);
-            }
-        }
     }
 
     @Override
     public void onStructureInvalid() {
         super.onStructureInvalid();
-        blazeVents = null;
-    }
-
-    public boolean hasBlaze(){
-        return this.isWorking;
-    }
-
-
-    protected void blazeUpdate(){
-        if (blazeVents == null) return;
-
-        boolean anyWorking = false;
-
-        for (var vent : blazeVents) {
-            long increase = vent.consumeBlaze();
-            if (increase > 0) {
-                anyWorking = true;
-            }
-        }
-        this.isWorking = anyWorking;
     }
 
     /*
@@ -122,8 +73,7 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
     //////////////////////////////////////
 
     @Nullable
-    public static GTRecipe volcanusRecipe(MetaMachine machine, @Nonnull GTRecipe recipe) {
-        recipe
+    public GTRecipe volcanusRecipe(MetaMachine machine, @Nonnull GTRecipe recipe) {
         if (recipe.getType() == GTRecipeTypes.BLAST_RECIPES){
             if (recipe.data.getInt("ebf_temp") <= 4000){
                 recipe.data.putInt("ebf_temp", 0);
@@ -132,17 +82,24 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
             }
         }
         if (machine instanceof VolcanusMachine volcanus) {
-            if (volcanus.hasBlaze()){
                 return recipe;
-            }
-            return recipe;
         }
         throw new RuntimeException("Machine is not a Volcanus");
+    }
+
+    @Nullable
+    private IMultiPart getVent() {
+        for (IMultiPart part : getParts()) {
+            if (part instanceof BlazeVentMachine)
+                return part;
+        }
+        return null;
     }
 
     @Override
     protected @org.jetbrains.annotations.Nullable GTRecipe getRealRecipe(GTRecipe recipe) {
         recipe = super.getRealRecipe(volcanusRecipe(this, recipe));
+        //recipe = blazeVent.doBlaze(recipe);
         return recipe;
     }
 
