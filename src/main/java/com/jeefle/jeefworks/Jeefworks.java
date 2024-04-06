@@ -9,6 +9,7 @@ import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
 import com.gregtechceu.gtceu.utils.FormattingUtil;
 import com.jeefle.jeefworks.data.JWMachines;
+import com.jeefle.jeefworks.data.JWMaterials;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
 import com.jeefle.jeefworks.registry.JWDatagen;
 import net.minecraft.client.Minecraft;
@@ -69,6 +70,7 @@ public class Jeefworks {
     // As well as this.
     private void addMaterials(MaterialEvent event) {
         //CustomMaterials.init();
+        JWMaterials.init();
     }
 
     // This is optional, though.

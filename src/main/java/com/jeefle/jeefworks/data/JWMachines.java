@@ -93,7 +93,7 @@ public class JWMachines {
             registerSimpleMachines("dehydrator", GTRecipeTypes.MACERATOR_RECIPES, GTMachines.defaultTankSizeFunction, ULVTier);
     */
 
-    public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/casings/vulcanic_casing"), 20000, MV2ZPM);
+    public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/machine/blaze_vent"), 20000, MV2ZPM);
 
 
     public static final MultiblockMachineDefinition VOLCANUS = REGISTRATE.multiblock("volcanus", VolcanusMachine::new)

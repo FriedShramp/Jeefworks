@@ -44,8 +44,6 @@ loom {
     runs {
         data {
             data()
-            programArgs "--all", "--mod", mod_id
-            programArgs "--output", generatedResources.absolutePath
             programArgs "--existing", file("src/main/resources").absolutePath
         }
     }
