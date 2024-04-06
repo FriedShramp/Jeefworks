@@ -36,16 +36,16 @@ loom {
         // note that your AT *MUST* be located at
         // src/main/resources/META-INF/accesstransformer.cfg
         // to work as there is currently no config option to change this.
+        convertAccessWideners = true
         // also, any names used in your access transformer will need to be
         // in SRG mapped ("func_" / "field_" with MCP class names) to work!
         // (both of these things may be subject to change in the future)
-    }
-
-    runs {
-        data {
-            data()
-            programArgs "--existing", file("src/main/resources").absolutePath
+        dataGen {
+            mod(mod_id)
         }
+    }
+    runConfigs.named("data").configure {
+        programArg("--existing=" + file("src/main/resources").absolutePath)
     }
 }
 

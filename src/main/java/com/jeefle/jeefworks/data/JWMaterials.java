@@ -23,7 +23,7 @@ public class JWMaterials {
     public static Material Vulcanic_Alloy = Builder("vulcanic")
             .ingot().fluid().dust()
             .blastTemp(3540)
-            .color(0x1f1003).iconSet(MaterialIconSet.SHINY)
+            .color(0x4d322d).iconSet(MaterialIconSet.DULL)
             .appendFlags(EXT_METAL, GENERATE_PLATE, GENERATE_FRAME, GENERATE_SPRING)
             .buildAndRegister();
 

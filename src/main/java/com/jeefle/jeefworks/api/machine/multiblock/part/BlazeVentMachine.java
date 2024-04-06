@@ -55,7 +55,7 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
     }
 
     protected NotifiableFluidTank createTank(Object... args) {
-        return new NotifiableFluidTank(this, 1, tankCapacity, IO.BOTH);
+        return new NotifiableFluidTank(this, 1, tankCapacity, IO.IN);
     }
 
     public long consumeBlaze(long fluidAmount){

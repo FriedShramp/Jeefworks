@@ -32,9 +32,11 @@ public class Jeefworks {
 
     public Jeefworks() {
         IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+        MinecraftForge.EVENT_BUS.register(this);
 
         JWCreativeTabs.init();
         JWDatagen.init();
+        REGISTRATE.registerRegistrate();
 
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::clientSetup);
@@ -47,7 +49,7 @@ public class Jeefworks {
         // Most other events are fired on Forge's bus.
         // If we want to use annotations to register event listeners,
         // we need to register our object like this!
-        MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {

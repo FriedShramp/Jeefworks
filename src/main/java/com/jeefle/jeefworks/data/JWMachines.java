@@ -87,13 +87,14 @@ public class JWMachines {
     public static final int[] MV2ZPM = GTValues.tiersBetween(2, 7);
     public static final int[] LV2ZPM = GTValues.tiersBetween(1, 7);
     public static final int[] ULVTier = {GTValues.ULV};
+    public static final int[] HVTier = {HV};
 
     /* Declaration Example
     public static final MachineDefinition[] DEHYDRATOR =
             registerSimpleMachines("dehydrator", GTRecipeTypes.MACERATOR_RECIPES, GTMachines.defaultTankSizeFunction, ULVTier);
     */
 
-    public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/machine/blaze_vent"), 20000, MV2ZPM);
+    public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/machine/blaze_vent"), 20000, HVTier);
 
 
     public static final MultiblockMachineDefinition VOLCANUS = REGISTRATE.multiblock("volcanus", VolcanusMachine::new)
@@ -123,6 +124,8 @@ public class JWMachines {
                             Component.translatable(FormattingUtil.formatNumbers(4000) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
                 }
             })
+            .tooltips(Component.translatable("jeefworks.volcanus.tooltip1"))
+            .langValue("Octan™ Pyrotheic Oven")
             .compassNodeSelf()
             .register();
 
@@ -168,12 +171,12 @@ public class JWMachines {
         return registerTieredMachines(name,
                 (holder, tier) -> new BlazeVentMachine(holder, tier, initialCapacity),
                 (tier, builder) -> {
-                    builder.langValue(VNF[tier] + ' ' + displayname)
+                    builder.langValue(displayname)
                             .rotationState(RotationState.ALL)
-                            .workableTieredHullRenderer(model)
+                            .workableCasingRenderer(Jeefworks.id("block/casings/vulcanic_casing"), model)
                             .abilities(APartAbility.BLAZE_VENT)
                             .compassNode("fluid_hatch")
-                            .tooltips(Component.translatable("gtceu.machine." + model + ".tooltip"));
+                            .tooltips(Component.translatable("jeefworks.blaze_vent"));
                     return builder.register();
                 }, tiers);
     }
