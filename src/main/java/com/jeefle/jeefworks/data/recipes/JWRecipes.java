@@ -34,6 +34,14 @@ public class JWRecipes {
                 'T', GTBlocks.CASING_STEEL_SOLID.asStack(),
                 'A', JWCasingBlocks.VULCANIC_CASING.asStack());
 
+        VanillaRecipeHelper.addShapedRecipe(provider, "blaze_vent", new ItemStack(JWMachines.BLAZE_VENT[HV].getItem()),
+                "AMA", "ARA", "CBC",
+                'C', JWCasingBlocks.VULCANIC_CASING.asStack(),
+                'B', new UnificationEntry(rotor, Steel),
+                'R', GTMachines.FLUID_IMPORT_HATCH[HV].asStack(),
+                'M', new UnificationEntry(frameGt, Vulcanic_Alloy),
+                'A', new UnificationEntry(plate, Vulcanic_Alloy));
+
         ASSEMBLER_RECIPES.recipeBuilder("vulcanic_casing")
                 .inputItems(new UnificationEntry(frameGt, Vulcanic_Alloy))
                 .inputItems(new UnificationEntry(plate, Vulcanic_Alloy), 6)
