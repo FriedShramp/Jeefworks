@@ -8,6 +8,7 @@ import com.gregtechceu.gtceu.api.gui.GuiTextures;
 import com.gregtechceu.gtceu.api.machine.IMachineBlockEntity;
 import com.gregtechceu.gtceu.api.machine.feature.IFancyUIMachine;
 import com.gregtechceu.gtceu.api.machine.feature.multiblock.IWorkableMultiController;
+import com.gregtechceu.gtceu.api.machine.multiblock.part.MultiblockPartMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.part.TieredPartMachine;
 import com.gregtechceu.gtceu.api.machine.trait.NotifiableFluidTank;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
@@ -30,11 +31,16 @@ import net.minecraft.world.level.material.Fluids;
 //mostly stolen from gt--
 public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachine {
 
-    private static final double discount = 0.7;
-    private static final double quicken = 0.5;
-    private static final double blazeConstant = 1;
+    private static final double discount = 0.6;
+    private static final double quicken = 0.3;
+    private static final double blazeConstant = 2.2;
+    private double bcount = 0;
 
     private static final double consumptionRate = 0.5;
+
+    protected final IO io;
+
+    protected static final ManagedFieldHolder MANAGED_FIELD_HOLDER = new ManagedFieldHolder(BlazeVentMachine.class, MultiblockPartMachine.MANAGED_FIELD_HOLDER);
 
     @Persisted
     public final NotifiableFluidTank tank;
@@ -45,17 +51,27 @@ public class BlazeVentMachine extends TieredPartMachine implements IFancyUIMachi
         super(holder, tier);
         this.tankCapacity = initialCapacity;
         this.tank = createTank();
+        this.io = IO.IN;
+    }
+
+    @Override
+    public ManagedFieldHolder getFieldHolder() {
+        return MANAGED_FIELD_HOLDER;
     }
 
 
     @Override
     public void onWorking(IWorkableMultiController controller) {
         super.beforeWorking(controller);
-        this.consumeBlaze((long) blazeConstant);
+        this.bcount += blazeConstant;
+        if (bcount >= 1){
+            this.consumeBlaze((long) Math.floor(bcount));
+            bcount = bcount - Math.floor(bcount);
+        }
     }
 
     protected NotifiableFluidTank createTank(Object... args) {
-        return new NotifiableFluidTank(this, 1, tankCapacity, IO.IN);
+        return new NotifiableFluidTank(this, 1, tankCapacity, IO.BOTH);
     }
 
     public long consumeBlaze(long fluidAmount){

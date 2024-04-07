@@ -34,6 +34,7 @@ import com.gregtechceu.gtceu.api.registry.registrate.MultiblockMachineBuilder;
 import com.gregtechceu.gtceu.client.TooltipHelper;
 import com.gregtechceu.gtceu.client.renderer.machine.*;
 import com.gregtechceu.gtceu.common.block.BoilerFireboxType;
+import com.gregtechceu.gtceu.common.data.GTBlocks;
 import com.gregtechceu.gtceu.common.data.GTMachines;
 import com.gregtechceu.gtceu.common.data.GTRecipeModifiers;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
@@ -103,17 +104,22 @@ public class JWMachines {
             .recipeModifier(GTRecipeModifiers.PARALLEL_HATCH.apply(OverclockingLogic.PERFECT_OVERCLOCK, (oc) -> GTRecipeModifiers::ebfOverclock))
             .appearanceBlock(JWCasingBlocks.VULCANIC_CASING)
             .pattern(definition -> FactoryBlockPattern.start()
-                    .aisle("AAA", "AAA", "AAA")
-                    .aisle("AAA", "A#A", "AMA")
-                    .aisle("ASA", "AAA", "AAA")
+                    .aisle(" V V "," V V "," V V ", "  V  ", "  V  ","     ")
+                    .aisle("V   V","V   V","VAAAV", " nnn ", " nnn ","  V  ")
+                    .aisle("     ","  b  "," A#A ", "Vn#nV", "VnMnV"," V V ")
+                    .aisle("V   V","V   V","VASAV", " nnn ", " nnn ","  V  ")
+                    .aisle(" V V "," V V "," V V ", "  V  ", "  V  ","     ")
                     .where("S", Predicates.controller(Predicates.blocks(definition.get())))
                     .where("A", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get())
                             .or(autoAbilities(definition.getRecipeTypes()))
-                            .or(abilities(APartAbility.BLAZE_VENT).setExactLimit(1))
-                            .or(autoAbilities(true, false, true)))
+                            .or(autoAbilities(true, false, false)))
                     .where("M", abilities(PartAbility.MUFFLER))
+                    .where("b", abilities(APartAbility.BLAZE_VENT))
                     .where("#", Predicates.air())
+                    .where("n", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get()))
                     .where("c", heatingCoils())
+                    .where("V", Predicates.blocks(GTBlocks.CASING_STEEL_SOLID.get()))
+                    .where(" ", Predicates.any())
                     .build())
             .workableCasingRenderer(
                     Jeefworks.id("block/casings/vulcanic_casing"),

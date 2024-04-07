@@ -6,6 +6,7 @@ import com.gregtechceu.gtceu.api.addon.events.MaterialCasingCollectionEvent;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
 import com.jeefle.jeefworks.api.recipe.BlazeVentCondition;
 import com.jeefle.jeefworks.data.JWCasingBlocks;
+import com.jeefle.jeefworks.data.recipes.JWRecipes;
 import net.minecraft.data.recipes.FinishedRecipe;
 import com.gregtechceu.gtceu.api.registry.GTRegistries;
 import com.gregtechceu.gtceu.api.registry.registrate.GTRegistrate;
@@ -37,7 +38,7 @@ public class JWAddon implements IGTAddon {
 
     @Override
     public void addRecipes(Consumer<FinishedRecipe> provider) {
-        //CustomRecipes.init(provider);
+        JWRecipes.init(provider);
     }
 
     @Override

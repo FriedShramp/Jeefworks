@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlazeVentCondition extends RecipeCondition {
     public final static BlazeVentCondition INSTANCE = new BlazeVentCondition();
 
-    private double blazeConstant = 1;
+    private double blazeConstant = 2.2;
 
     public BlazeVentCondition(double blazeConstant) {
         super();

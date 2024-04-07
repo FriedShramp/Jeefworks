@@ -30,6 +30,5 @@ public class JWMaterials {
     public static JWBuilder Builder(String id) {
         return new JWBuilder(GTCEu.id(id));
     }
-    public static void init() {
-    }
+    public static void init() {}
 }

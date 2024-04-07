@@ -1,6 +1,6 @@
-// 1.20.1	2024-04-06T02:22:32.188134	Registrate Provider for jeefworks [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
-568b1f1c0014c6e2e1b545a7883625638779b0dc assets/jeefworks/lang/en_ud.json
-b1b0b838970c680dfa1d1f167137a915f4a21421 assets/jeefworks/lang/en_us.json
+// 1.20.1	2024-04-06T22:56:16.5900774	Registrate Provider for jeefworks [Recipes, Advancements, Loot Tables, Tags (blocks), Tags (items), Tags (fluids), Tags (entity_types), generic_server_provider, Blockstates, Item models, Lang (en_us/en_ud), generic_client_provider]
+52a7227e5d24059a712d6e9cc0824c2b73179faa assets/jeefworks/lang/en_ud.json
+15a31200c508cb7c394f23d8c059ba7b683de73a assets/jeefworks/lang/en_us.json
 5d4b3a7dcf78b5eabdcb421fd226dac4d20ec7ab data/forge/tags/blocks/mineable/wrench.json
 e3dbc10b6ce9b773fc2ede2354f4457d8c0e50e1 data/jeefworks/loot_tables/blocks/bioplastic_casing.json
 b11c453ef97a17fb569e7256c6032799a2ae3750 data/jeefworks/loot_tables/blocks/vulcanic_casing.json

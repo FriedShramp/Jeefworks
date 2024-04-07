@@ -3,6 +3,7 @@
   "block.jeefworks.hv_blaze_vent": "Blaze Heat Vent",
   "block.jeefworks.volcanus": "Octan™ Pyrotheic Oven",
   "block.jeefworks.vulcanic_casing": "Vulcanic Casing",
-  "jeefworks.blaze_vent": "These seem remarkably similar pyrotheum heating hatches from gt++? \n Ah no these are patented blaze vents! old jeefworks recipe!",
-  "jeefworks.volcanus.tooltip1": "Legally distinct from other notable Pyrotheic Ovens"
+  "jeefworks.blaze_vent": "§7These seem remarkably similar pyrotheum heating hatches from gt++? \n Ah no these are patented blaze vents! old jeefworks recipe!",
+  "jeefworks.volcanus.tooltip1": "§7Legally distinct from other notable Pyrotheic Ovens",
+  "material.gtceu.vulcanic": "Vulcanic"
 }
