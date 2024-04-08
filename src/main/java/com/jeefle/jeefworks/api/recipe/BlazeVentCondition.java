@@ -16,13 +16,6 @@ import org.jetbrains.annotations.NotNull;
 public class BlazeVentCondition extends RecipeCondition {
     public final static BlazeVentCondition INSTANCE = new BlazeVentCondition();
 
-    private double blazeConstant = 2.2;
-
-    public BlazeVentCondition(double blazeConstant) {
-        super();
-        this.blazeConstant = blazeConstant;
-    }
-
     public BlazeVentCondition() {
         super();
     }
@@ -33,13 +26,13 @@ public class BlazeVentCondition extends RecipeCondition {
         if (machine instanceof WorkableMultiblockMachine workableMultiblockMachine){
             for (IMultiPart part : workableMultiblockMachine.getParts()) {
                 if (part instanceof BlazeVentMachine vent) {
-                    if (vent.checkBlaze((long)(blazeConstant))){
+                    if (vent.getValidContents(recipe)){
                         return true;
                     }
                 }
             }
         }
-        recipeLogic.setWaiting(Component.literal("Not Enough Blaze!"));
+        recipeLogic.setWaiting(Component.literal("Not Valid Fluid!"));
         return false;
     }
 

@@ -75,13 +75,6 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
 
     @Nullable
     public GTRecipe volcanusRecipe(MetaMachine machine, @Nonnull GTRecipe recipe) {
-        if (recipe.getType() == GTRecipeTypes.BLAST_RECIPES){
-            if (recipe.data.getInt("ebf_temp") <= 4000){
-                recipe.data.putInt("ebf_temp", 0);
-            }else{
-                return null;
-            }
-        }
         if (machine instanceof VolcanusMachine volcanus) {
             recipe.conditions.add(new BlazeVentCondition());
                 return recipe;
