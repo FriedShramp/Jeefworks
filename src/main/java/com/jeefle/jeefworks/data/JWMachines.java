@@ -65,6 +65,8 @@ import com.jeefle.jeefworks.Jeefworks;
 import com.jeefle.jeefworks.api.machine.multiblock.APartAbility;
 import com.jeefle.jeefworks.api.machine.multiblock.VolcanusMachine;
 import com.jeefle.jeefworks.api.machine.multiblock.part.BlazeVentMachine;
+import com.jeefle.jeefworks.api.machine.multiblock.part.NonConsumingHatchMachine;
+import com.jeefle.jeefworks.api.renderer.BiovatRenderer;
 import com.jeefle.jeefworks.registry.JWCreativeTabs;
 import it.unimi.dsi.fastutil.ints.Int2LongFunction;
 import net.minecraft.ChatFormatting;
@@ -96,12 +98,13 @@ public class JWMachines {
     */
 
     public static final MachineDefinition[] BLAZE_VENT = registerBlazeVents("blaze_vent", "Blaze Heat Vent", Jeefworks.id("block/machine/blaze_vent"), 20000, HVTier);
+    public static final MachineDefinition[] SUBSTRATE_HATCH = registerNonConsumingHatch("substrate_hatch", "Substrate Access Hatch", Jeefworks.id("block/machine/blaze_vent"), 3000, HVTier);
 
 
     public static final MultiblockMachineDefinition VOLCANUS = REGISTRATE.multiblock("volcanus", VolcanusMachine::new)
             .rotationState(RotationState.NON_Y_AXIS)
             .recipeTypes(GTRecipeTypes.BLAST_RECIPES)
-            .recipeModifier(GTRecipeModifiers.PARALLEL_HATCH.apply(OverclockingLogic.PERFECT_OVERCLOCK, (oc) -> GTRecipeModifiers::ebfOverclock))
+            .recipeModifier(GTRecipeModifiers.ELECTRIC_OVERCLOCK.apply(OverclockingLogic.PERFECT_OVERCLOCK))
             .appearanceBlock(JWCasingBlocks.VULCANIC_CASING)
             .pattern(definition -> FactoryBlockPattern.start()
                     .aisle(" V V "," V V "," V V ", "  V  ", "  V  ","     ")
@@ -109,25 +112,25 @@ public class JWMachines {
                     .aisle("     ","  b  "," A#A ", "Vn#nV", "VnMnV"," V V ")
                     .aisle("V   V","V   V","VASAV", " nnn ", " nnn ","  V  ")
                     .aisle(" V V "," V V "," V V ", "  V  ", "  V  ","     ")
-                    .where("S", Predicates.controller(Predicates.blocks(definition.get())))
-                    .where("A", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get())
+                    .where("S", controller(blocks(definition.get())))
+                    .where("A", blocks(JWCasingBlocks.VULCANIC_CASING.get())
                             .or(autoAbilities(definition.getRecipeTypes()))
                             .or(autoAbilities(true, false, false)))
                     .where("M", abilities(PartAbility.MUFFLER))
                     .where("b", abilities(APartAbility.BLAZE_VENT))
-                    .where("#", Predicates.air())
-                    .where("n", Predicates.blocks(JWCasingBlocks.VULCANIC_CASING.get()))
+                    .where("#", air())
+                    .where("n", blocks(JWCasingBlocks.VULCANIC_CASING.get()))
                     .where("c", heatingCoils())
-                    .where("V", Predicates.blocks(GTBlocks.CASING_STEEL_SOLID.get()))
-                    .where(" ", Predicates.any())
+                    .where("V", blocks(GTBlocks.CASING_STEEL_SOLID.get()))
+                    .where(" ", any())
                     .build())
             .workableCasingRenderer(
                     Jeefworks.id("block/casings/vulcanic_casing"),
                     Jeefworks.id("block/multiblock/volcanus"), false)
             .additionalDisplay((controller, components) -> {
-                if (controller instanceof CoilWorkableElectricMultiblockMachine coilMachine && controller.isFormed()) {
+                if (controller instanceof VolcanusMachine && controller.isFormed()) {
                     components.add(Component.translatable("gtceu.multiblock.blast_furnace.max_temperature",
-                            Component.translatable(FormattingUtil.formatNumbers(4000) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
+                            Component.translatable(FormattingUtil.formatNumbers(((VolcanusMachine) controller).getTemp()) + "K").setStyle(Style.EMPTY.withColor(ChatFormatting.RED))));
                 }
             })
             .tooltips(Component.translatable("jeefworks.volcanus.tooltip1"))
@@ -171,6 +174,20 @@ public class JWMachines {
             definitions[tier] = builder.apply(tier, register);
         }
         return definitions;
+    }
+
+    private static MachineDefinition[] registerNonConsumingHatch(String name, String displayname, ResourceLocation model, long initialCapacity, int[] tiers) {
+        return registerTieredMachines(name,
+                (holder, tier) -> new NonConsumingHatchMachine(holder, tier, (int) initialCapacity),
+                (tier, builder) -> {
+                    builder.langValue(displayname)
+                            .rotationState(RotationState.ALL)
+                            .workableCasingRenderer(Jeefworks.id("block/casings/bioplastic_casing"), model)
+                            .abilities(APartAbility.SUBSTRATE_HATCH)
+                            .compassNode("fluid_hatch")
+                            .tooltips(Component.translatable("jeefworks.blaze_vent"));
+                    return builder.register();
+                }, tiers);
     }
 
     private static MachineDefinition[] registerBlazeVents(String name, String displayname, ResourceLocation model, long initialCapacity, int[] tiers) {

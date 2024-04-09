@@ -12,6 +12,7 @@ import com.gregtechceu.gtceu.api.machine.feature.multiblock.IMultiPart;
 import com.gregtechceu.gtceu.api.machine.multiblock.CoilWorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.machine.multiblock.WorkableElectricMultiblockMachine;
 import com.gregtechceu.gtceu.api.recipe.GTRecipe;
+import com.gregtechceu.gtceu.api.recipe.GTRecipeType;
 import com.gregtechceu.gtceu.common.data.GTRecipeTypes;
 import com.gregtechceu.gtceu.common.machine.multiblock.part.ItemBusPartMachine;
 import com.jeefle.jeefworks.api.machine.feature.IGTPPMachine;
@@ -75,20 +76,30 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
 
     @Nullable
     public GTRecipe volcanusRecipe(MetaMachine machine, @Nonnull GTRecipe recipe) {
+        GTRecipe newRecipe = recipe.copy();
         if (machine instanceof VolcanusMachine volcanus) {
-            recipe.conditions.add(new BlazeVentCondition());
-                return recipe;
+            newRecipe.conditions.add(new BlazeVentCondition());
+                return newRecipe;
         }
-        throw new RuntimeException("Machine is not a Volcanus");
+        return null;
     }
 
     @Nullable
-    private IMultiPart getVent() {
+    public IMultiPart getVent() {
         for (IMultiPart part : getParts()) {
             if (part instanceof BlazeVentMachine)
                 return part;
         }
         return null;
+    }
+
+    public int getTemp(){
+        int temp = 0;
+        for (IMultiPart part : getParts()) {
+            if (part instanceof BlazeVentMachine)
+                temp = ((BlazeVentMachine) part).getTemp();
+        }
+        return temp;
     }
 
     @Override
@@ -98,8 +109,7 @@ public class VolcanusMachine extends CoilWorkableElectricMultiblockMachine imple
         return recipe;
     }
 
-    @Override
-    public int getCoilTier(){
-        return 1;
+    public int getCoilTier() {
+        return -1;
     }
 }

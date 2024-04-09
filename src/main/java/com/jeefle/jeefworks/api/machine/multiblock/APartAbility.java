@@ -10,6 +10,7 @@ import java.util.function.Supplier;
 public class APartAbility extends PartAbility {
 
     public static final PartAbility BLAZE_VENT = new PartAbility("blaze_vent");
+    public static final PartAbility SUBSTRATE_HATCH = new PartAbility("substrate_hatch");
     public APartAbility(String name) {
         super(name);
     }
